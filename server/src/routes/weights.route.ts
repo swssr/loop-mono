@@ -10,6 +10,10 @@ import {
 
 const router = Router();
 
+router.get('/', AuthCheck, async (req: any, res) => {
+  res.send('Welcome Home');
+});
+
 router.get('/get_weight_history', AuthCheck, async (req: any, res) => {
   const response = await GetWeightsWhere(req?.user!);
 
