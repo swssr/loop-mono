@@ -17,4 +17,4 @@ const WeightSchema = new Schema<IUserWeight>({
   weights: { type: [], required: true },
 });
 
-export default model('Weight', WeightSchema);
+export const WeightModel = model('Weight', WeightSchema);

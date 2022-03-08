@@ -1,8 +1,7 @@
 import { nanoid } from 'nanoid';
-import { User } from '../models/user.model';
-import WeightModel, { IUserWeight } from '../models/weight.model';
+import { WeightModel, IUserWeight, IUser } from '../models';
 
-export async function GetWeightsWhere(user: User) {
+export async function GetWeightsWhere(user: IUser) {
   const UserWeight = await WeightModel.findOne({ userUid: user._id });
 
   return (
@@ -15,7 +14,7 @@ export async function GetWeightsWhere(user: User) {
   );
 }
 
-export async function AddUserWeights(user: User, weight: IUserWeight) {
+export async function AddUserWeights(user: IUser, weight: IUserWeight) {
   return await WeightModel.findOneAndUpdate(
     { userUid: user._id },
     { userUid: user._id, $push: { weights: { ...weight, uid: nanoid() } } },
@@ -23,7 +22,7 @@ export async function AddUserWeights(user: User, weight: IUserWeight) {
   );
 }
 
-export async function DeleteUserWeights(uid: string, user: User) {
+export async function DeleteUserWeights(uid: string, user: IUser) {
   const UserWeight = await WeightModel.findOne({ userUid: user._id });
 
   const filteredSnapshot = UserWeight.weights.filter((w) => w?.uid !== uid);
@@ -33,7 +32,7 @@ export async function DeleteUserWeights(uid: string, user: User) {
   });
 }
 
-export async function EditUserWeights(uid: string, payload: any, user: User) {
+export async function EditUserWeights(uid: string, payload: any, user: IUser) {
   const UserWeight = await WeightModel.findOne({ userUid: user._id });
 
   const updated = UserWeight.weights

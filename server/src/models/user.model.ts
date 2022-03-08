@@ -4,7 +4,7 @@ import * as jwt from 'jsonwebtoken';
 
 const SALT_ROUNDS = 10;
 
-export interface User {
+export interface IUser {
   _id: string;
   fullname?: string;
   email?: string;
@@ -17,15 +17,16 @@ export interface User {
   }[];
 }
 
-const UserSchema = new Schema<User>({
+const UserSchema = new Schema<IUser>({
   email: { type: String, required: true },
   fullname: { type: String, required: true },
   weights: { type: [], required: true },
   password: { type: String, required: true },
 });
 
+//Before new user is saved on databse, hash password
 UserSchema.pre('save', async function (next: any) {
-  const _user = this as User;
+  const _user = this as IUser;
 
   if (!this.isModified('password')) return next();
 
@@ -38,20 +39,18 @@ UserSchema.pre('save', async function (next: any) {
   }
 });
 
-//Methods
+//Compare user password in sign_in payload
 UserSchema.methods.validatePassword = async function (password: string) {
-  console.log('Inside validate password');
   return await bcrypt.compare(password, this.password);
 };
 
-const KEY = 'Vdz7>K@W!5}pknh';
-
+//Signs JWT adds user uid and fullname
 UserSchema.methods.generateAuthToken = async function () {
-  const user = this as User;
+  const user = this as IUser;
 
   const token = jwt.sign(
-    { uid: user._id },
-    process.env.JWT_ACCESS_TOKEN || KEY,
+    { uid: user._id, fullname: user?.fullname },
+    process.env.JWT_ACCESS_TOKEN,
     {
       expiresIn: '5h',
     }
@@ -60,4 +59,4 @@ UserSchema.methods.generateAuthToken = async function () {
   return token;
 };
 
-export default model('User', UserSchema);
+export const UserModel = model('User', UserSchema);

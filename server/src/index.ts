@@ -1,6 +1,5 @@
 import * as express from 'express';
 import * as cors from 'cors';
-import 'dotenv/config';
 
 // const router = require('./routes');
 import Router from './routes';
@@ -22,6 +21,6 @@ Router(app);
 SetupDatabase();
 
 //Start server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 const target = 'localhost';
 app.listen(PORT, () => console.log(`App started on ${target}:${PORT}`));

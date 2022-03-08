@@ -1,7 +1,6 @@
 import { ValidateAuthPayload } from '../helpers';
 import { IAuthPayload } from '../interfaces';
 import { UserModel } from '../models';
-import { User } from '../models/user.model';
 
 export async function Login(payload: IAuthPayload) {
   let error;
@@ -37,9 +36,6 @@ export async function Register(payload: IAuthPayload) {
   });
 
   newUser.save();
-
-  // const user = await UserModel.create({ email: payload.email });
-
   return { success: true };
 }
 
